@@ -69,7 +69,15 @@ namespace Parking.Database.CommandFactory
             queries.Add("GetShiftData", @"select count(*) as RecordCount, sum([ParkingCharge]) as TotalCollection from [tbl_parking]
                                                 where ExitTime is not null and  ParkingCharge is not null  and ExitTime > '{0}'");
 
+            queries.Add("GetVehicleEntryWebServerUploadData", @"SELECT [Id], [TDClientDeviceId], [TicketNumber], [ValidationNumber], [VehicleNumber], 
+                            [VehicleType], [EntryTime] FROM [tbl_parking] WHERE [IsParkingEntryDetailsUploadedToServer] = 0");
 
+            queries.Add("UpdateVehicleEntryWebServerUploadStatus", @"UPDATE [tbl_parking] SET [IsParkingEntryDetailsUploadedToServer] = 1 WHERE [Id] = '{0}'");
+
+            queries.Add("GetVehicleExitWebServerUploadData", @"SELECT [Id], [MPSDeviceId], [TicketNumber], [ExitTime], [ParkingDuration], [ParkingCharge], 
+                            [PenalityCharge], [TotalPaidAmount] FROM [tbl_parking] WHERE [IsParkingEntryDetailsUploadedToServer] = 1 AND [IsParkingExitDetailsUploadedToServer] = 0 ");
+
+            queries.Add("UpdateVehicleExitWebServerUploadStatus", @"UPDATE [tbl_parking] SET [IsParkingExitDetailsUploadedToServer] = 1 WHERE [Id] = '{0}'");
         }
 
         public void UpdateMasterSettings(string companyName,
@@ -206,5 +214,70 @@ namespace Parking.Database.CommandFactory
                 throw;
             }
         }
+
+        public DataTable GetVehicleEntryDataForWebServerUpload()
+        {
+            try
+            {
+                var query = string.Format(queries["GetVehicleEntryWebServerUploadData"]);
+
+                var sqlCommand = sqlDataAccess.GetCommand(query);
+
+                return sqlDataAccess.Execute(sqlCommand);
+            }
+            catch (Exception exception)
+            {
+                FileLogger.Log($"Problem fetching vehicle entry information for uploading on Web Server as : {exception.Message}");
+                throw;
+            }
+
+        }
+
+        public void UpdateVehicleEntryWebServerUploadStatus(string parkingId)
+        {
+            try
+            {
+                var query = string.Format(queries["UpdateVehicleEntryWebServerUploadStatus"], parkingId);
+                sqlDataAccess.ExecuteNonQuery(query);
+            }
+            catch (Exception exception)
+            {
+                FileLogger.Log($"Problem updating vehicle entry web server upload status for parking = {parkingId} as : {exception.Message}");
+                throw;
+            }
+        }
+
+        public DataTable GetVehicleExitDataForWebServerUpload()
+        {
+            try
+            {
+                var query = string.Format(queries["GetVehicleExitWebServerUploadData"]);
+
+                var sqlCommand = sqlDataAccess.GetCommand(query);
+
+                return sqlDataAccess.Execute(sqlCommand);
+            }
+            catch (Exception exception)
+            {
+                FileLogger.Log($"Problem fetching vehicle exit information for uploading on Web Server as : {exception.Message}");
+                throw;
+            }
+
+        }
+
+        public void UpdateVehicleExitWebServerUploadStatus(string parkingId)
+        {
+            try
+            {
+                var query = string.Format(queries["UpdateVehicleExitWebServerUploadStatus"], parkingId);
+                sqlDataAccess.ExecuteNonQuery(query);
+            }
+            catch (Exception exception)
+            {
+                FileLogger.Log($"Problem updating vehicle exit web server upload status for parking = {parkingId} as : {exception.Message}");
+                throw;
+            }
+        }
+
     }
 }

@@ -3,20 +3,20 @@ using Newtonsoft.Json;
 
 namespace Parking.Common
 {
-    public sealed class ConfigurationReader
+    public sealed class TicketDispenserConfigurationReader
     {
         private const string configurationFileName = "DeviceConfig.json";
         private static readonly string ConfigFilePath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Substring(8)), configurationFileName);
 
         //TD Specific
-        private static TDClientSetting tDClientSetting = null;
+        private static TicketDispenserServerSettings settings = null;
         private static readonly object FileLock = new object();
 
-        public static TDClientSetting GetConfigurationSettings()
+        public static TicketDispenserServerSettings GetConfigurationSettings()
         {
             try
             {
-                if (tDClientSetting != null) return tDClientSetting;
+                if (settings != null) return settings;
                 lock (FileLock)
                 {                      
                     if (!File.Exists(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Substring(8)), "DeviceConfig.json")))
@@ -25,7 +25,7 @@ namespace Parking.Common
                     }
                     using (StreamReader reader = new StreamReader(ConfigFilePath))
                     {
-                        tDClientSetting = JsonConvert.DeserializeObject<TDClientSetting>(reader.ReadToEnd());
+                        settings = JsonConvert.DeserializeObject<TicketDispenserServerSettings>(reader.ReadToEnd());
                     }
                 }                
             }
@@ -34,7 +34,7 @@ namespace Parking.Common
                 FileLogger.Log($"Configuration settings could not be loaded successfully as : {e.Message}");
                 throw;
             }
-            return tDClientSetting;
+            return settings;
         }              
     }
 }

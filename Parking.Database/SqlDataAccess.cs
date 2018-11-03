@@ -183,9 +183,9 @@ namespace Parking.Database
         {
             try
             {
-                var tdSetting = ConfigurationReader.GetConfigurationSettings();
+                var settings = TicketDispenserConfigurationReader.GetConfigurationSettings();
 
-                var connectionString = $"Data Source = {tdSetting.TdServerIPAddress},{tdSetting.TdServerPort}; Network Library = DBMSSOCN; Initial Catalog = db_Parking; User ID = {tdSetting.TdServerUsername}; Password = {tdSetting.TdServerPassword};";
+                var connectionString = $"Data Source = {settings.IPAddress},{settings.Port}; Network Library = DBMSSOCN; Initial Catalog = db_Parking; User ID = {settings.Username}; Password = {settings.Password};";
 
                 return connectionString;
             }

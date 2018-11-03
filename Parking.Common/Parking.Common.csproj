@@ -65,13 +65,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigurationReader.cs" />
+    <Compile Include="TicketDispenserConfigurationReader.cs" />
     <Compile Include="Enums\DocumentType.cs" />
     <Compile Include="Enums\VehicleType.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="MPSConfigurationReader.cs" />
     <Compile Include="MPSSettings.cs" />
-    <Compile Include="TDClientSetting.cs" />
+    <Compile Include="TicketDispenserServerSettings.cs" />
     <Compile Include="Model\Ticket.cs" />
     <Compile Include="IPCamera.cs" />
     <Compile Include="Printer.cs" />
