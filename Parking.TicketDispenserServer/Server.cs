@@ -43,6 +43,9 @@ namespace Parking
 
             _gridViewManualPayStationDataUploadTimer = new Timer() { Interval = 60000 };
             _gridViewManualPayStationDataUploadTimer.Tick += UploadManualPayStationDataToServer;
+
+            GetMasterSettingsForTDClientDeviceConfig();
+            GetMasterSettingsForMPSDeviceConfig();
         }
 
         private void RefreshManualPayStationGridView(object sender, EventArgs e)
@@ -199,6 +202,105 @@ namespace Parking
             {
                 btnLoadManualPayStationData.Enabled = true;
             }
+        }
+
+
+        public void GetMasterSettingsForTDClientDeviceConfig()
+        {
+            try
+            {
+                DataRow record = _parkingDatabaseFactory.GetMasterSettingsForTDClientDeviceConfig();
+                txtTDClientDeviceId.Text = record[0].ToString();
+                txtTDClientUserId.Text = record[1].ToString();
+                txtTDClientPassword.Text = record[2].ToString();
+                txtTDClientLongLat.Text = record[3].ToString();
+                txtTDClientPLCBoardNumber.Text = record[4].ToString();
+                txtTDClientDriverCameraIPAddress.Text = record[5].ToString();
+                txtTDClientDriverCameraUsername.Text = record[6].ToString();
+                txtTDClientDriverCameraPassword.Text = record[7].ToString();
+                txtTDClientVehicleCameraIPAddress.Text = record[8].ToString();
+                txtTDClientVehicleCameraUsername.Text = record[9].ToString();
+                txtTDClientVehicleCameraPassword.Text = record[10].ToString();
+                txtTDClientTDServerIPAddress.Text = record[11].ToString();
+                txtTDClientTDServerPortNumber.Text = record[12].ToString();
+                txtTDClientTDServerUsername.Text = record[13].ToString();
+                txtTDClientTDServerPassword.Text = record[14].ToString();
+                txtTDClientFourWheelerParkingSpace.Text = record[15].ToString();
+                txtTDClientTwoWheelerParkingSpace.Text = record[16].ToString();
+            }
+            catch (Exception ex){}
+        }
+
+        public void GetMasterSettingsForMPSDeviceConfig()
+        {
+            try
+            {
+                DataRow record = _parkingDatabaseFactory.GetMasterSettingsForMPSDeviceConfig();
+                txtMPSDeviceId.Text = record[0].ToString();
+                txtMPSUserId.Text = record[1].ToString();
+                txtMPSPassword.Text = record[2].ToString();
+                txtMPSTDServerIPAddress.Text = record[3].ToString();
+                txtMPSTDServerPortNumber.Text = record[4].ToString();
+                txtMPSTDServerUsername.Text = record[5].ToString();
+                txtMPSTDServerPassword.Text = record[6].ToString();
+                txtVehicleStatusPassword.Text = record[7].ToString();
+                txtMPSFourWheelerParkingSpace.Text = record[8].ToString();
+                txtMPSTwoWheelerParkingSpace.Text = record[9].ToString();
+                txtMPSFourWheelerParkingRate.Text = record[10].ToString();
+                txtMPSTwoWheelerParkingRate.Text = record[11].ToString();
+                txtMPSLostTicketPenality.Text = record[12].ToString();
+            }
+            catch (Exception ex) {
+
+            }
+        }
+
+        private void btnMPSGenerateDeviceConfig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _parkingDatabaseFactory.UpdateMasterSettingsForMPSDeviceConfig(
+                        txtMPSDeviceId.Text.ToString(),
+                        txtMPSUserId.Text.ToString(),
+                        txtMPSPassword.Text.ToString(),
+                        txtMPSTDServerIPAddress.Text.ToString(),
+                        txtMPSTDServerPortNumber.Text.ToString(),
+                        txtMPSTDServerUsername.Text.ToString(),
+                        txtMPSTDServerPassword.Text.ToString(),
+                        txtVehicleStatusPassword.Text.ToString(),
+                        txtMPSFourWheelerParkingSpace.Text.ToString(),
+                        txtMPSTwoWheelerParkingSpace.Text.ToString(),
+                        txtMPSFourWheelerParkingRate.Text.ToString(),
+                        txtMPSTwoWheelerParkingRate.Text.ToString(),
+                        txtMPSLostTicketPenality.Text.ToString());
+            }
+            catch (Exception ex) { }
+        }
+
+        private void btnTDClientGenerateDeviceConfig_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _parkingDatabaseFactory.UpdateMasterSettingsForTDClientDeviceConfig(
+                    txtTDClientDeviceId.Text.ToString(),
+                    txtTDClientUserId.Text.ToString(),
+                    txtTDClientPassword.Text.ToString(),
+                    txtTDClientLongLat.Text.ToString(),
+                    txtTDClientPLCBoardNumber.Text.ToString(),
+                    txtTDClientDriverCameraIPAddress.Text.ToString(),
+                    txtTDClientDriverCameraUsername.Text.ToString(),
+                    txtTDClientDriverCameraPassword.Text.ToString(),
+                    txtTDClientVehicleCameraIPAddress.Text.ToString(),
+                    txtTDClientVehicleCameraUsername.Text.ToString(),
+                    txtTDClientVehicleCameraPassword.Text.ToString(),
+                    txtTDClientTDServerIPAddress.Text.ToString(),
+                    txtTDClientTDServerPortNumber.Text.ToString(),
+                    txtTDClientTDServerUsername.Text.ToString(),
+                    txtTDClientTDServerPassword.Text.ToString(),
+                    txtTDClientFourWheelerParkingSpace.Text.ToString(),
+                    txtTDClientTwoWheelerParkingSpace.Text.ToString());
+            }
+            catch(Exception ex) { }
         }
     }
 }

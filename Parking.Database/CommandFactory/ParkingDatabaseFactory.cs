@@ -35,6 +35,79 @@ namespace Parking.Database.CommandFactory
                                                         [LostTicketPenality] = '{5}', 
                                                     WHERE [Id] = '{6}'");
 
+            queries.Add("UpdateMasterSettingsForTDClientDeviceConfig", @"UPDATE [tbl_master]
+                                                   SET [TDClientDeviceId] = '{0}'
+                                                      ,[TDClientUserId] = '{1}'
+                                                      ,[TDClientPassword] = '{2}'
+                                                      ,[TDClientLongLat] = '{3}'
+                                                      ,[TDClientPLCBoardPortNumber] = '{4}'
+                                                      ,[TDClientDriverCameraIPAddress] = '{5}'
+                                                      ,[TDClientDriverCameraUserId] = '{6}'
+                                                      ,[TDClientDriverCameraPassword] = '{7}'
+                                                      ,[TDClientVehicleCameraIPAddress] = '{8}'
+                                                      ,[TDClientVehicleCameraUserId] = '{9}'
+                                                      ,[TDClientVehicleCameraPassword] = '{10}'
+                                                      ,[TDServerIPAddress] = '{11}'
+                                                      ,[TDServerPortNumber] = '{12}'
+                                                      ,[TDServerUsername] = '{13}'
+                                                      ,[TDServerPassword] = '{14}'
+                                                      ,[FourWheelerParkingSpace] = '{15}'
+                                                      ,[TwoWheelerParkingSpace] = '{16}'
+                                                 WHERE [Id] = '{17}'");
+
+
+            queries.Add("UpdateMasterSettingsForMPSDeviceConfig", @"UPDATE [tbl_master]
+                                                   SET [MPSDeviceId] = '{0}'
+                                                      ,[MPSUserId] = '{1}'
+                                                      ,[MPSPassword] = '{2}'
+	                                                  ,[TDServerIPAddress] = '{3}' 
+                                                      ,[TDServerPortNumber] = '{4}'
+                                                      ,[TDServerUsername] = '{5}'
+                                                      ,[TDServerPassword] = '{6}'
+                                                      ,[MPSVehicleStatusPassword] = '{7}'
+                                                      ,[FourWheelerParkingSpace] = '{8}'
+                                                      ,[TwoWheelerParkingSpace] = '{9}'
+                                                      ,[FourWheelerParkingRatePerHour] = '{10}'
+                                                      ,[TwoWheelerParkingRatePerHour] = '{11}'
+                                                      ,[LostTicketPenality] = '{12}'
+	                                                WHERE [Id] = '{13}'");
+
+            queries.Add("GetMasterSettingsForTDClientDeviceConfig", @"SELECT [TDClientDeviceId]
+                                                      ,[TDClientUserId]
+                                                      ,[TDClientPassword]
+                                                      ,[TDClientLongLat]
+                                                      ,[TDClientPLCBoardPortNumber]
+                                                      ,[TDClientDriverCameraIPAddress]
+                                                      ,[TDClientDriverCameraUserId]
+                                                      ,[TDClientDriverCameraPassword]
+                                                      ,[TDClientVehicleCameraIPAddress]
+                                                      ,[TDClientVehicleCameraUserId]
+                                                      ,[TDClientVehicleCameraPassword]
+                                                      ,[TDServerIPAddress]
+                                                      ,[TDServerPortNumber]
+                                                      ,[TDServerUsername]
+                                                      ,[TDServerPassword]
+                                                      ,[FourWheelerParkingSpace]
+                                                      ,[TwoWheelerParkingSpace]
+                                                FROM [tbl_master] 
+                                                 WHERE [Id] = '{0}'");
+
+            queries.Add("GetMasterSettingsForMPSDeviceConfig", @"SELECT [MPSDeviceId]
+                                                      ,[MPSUserId]
+                                                      ,[MPSPassword]
+	                                                  ,[TDServerIPAddress]
+                                                      ,[TDServerPortNumber]
+                                                      ,[TDServerUsername]
+                                                      ,[TDServerPassword]
+                                                      ,[MPSVehicleStatusPassword]
+                                                      ,[FourWheelerParkingSpace]
+                                                      ,[TwoWheelerParkingSpace]
+                                                      ,[FourWheelerParkingRatePerHour]
+                                                      ,[TwoWheelerParkingRatePerHour]
+                                                      ,[LostTicketPenality]
+                                                    FROM [tbl_master] 
+	                                                WHERE [Id] = '{0}'");
+
             queries.Add("InsertVehicleEntry", @"INSERT INTO [tbl_parking]
                                                             ([TDClientDeviceId],
                                                              [TicketNumber],
@@ -281,5 +354,93 @@ namespace Parking.Database.CommandFactory
             }
         }
 
+        public void UpdateMasterSettingsForTDClientDeviceConfig(
+                string tdClientDeviceId, string tdClientUserId, string tdClientPassword,
+                string tdClientLongLat, string tdClientPLCBoardPortNumber, string tdClientDriverCameraIPAddress,
+                string tdClientDriverCameraUserId, string tdClientDriverCameraPassword, string tdClientVehicleCameraIPAddress,
+                string tdClientVehicleCameraUserId, string tdClientVehicleCameraPassword, string tdServerIPAddress,
+                string tdServerPortNumber, string tdServerUsername, string tdServerPassword,
+                string fourWheelerParkingSpace, string twoWheelerParkingSpace
+            )
+        {
+            try
+            {
+                var query = string.Format(queries["UpdateMasterSettingsForTDClientDeviceConfig"], tdClientDeviceId, tdClientUserId, tdClientPassword,
+                    tdClientLongLat, tdClientPLCBoardPortNumber, tdClientDriverCameraIPAddress, tdClientDriverCameraUserId, 
+                    tdClientDriverCameraPassword, tdClientVehicleCameraIPAddress, tdClientVehicleCameraUserId,
+                    tdClientVehicleCameraPassword, tdServerIPAddress, tdServerPortNumber, tdServerUsername, tdServerPassword, fourWheelerParkingSpace, 
+                    twoWheelerParkingSpace, MasterId);
+                sqlDataAccess.ExecuteNonQuery(query);
+
+            }
+            catch (Exception exception)
+            {
+                FileLogger.Log($"TDClientDeviceConfig settings could not be updated successfully to database as : {exception.Message}");
+                throw;
+            }
+        }
+
+        public void UpdateMasterSettingsForMPSDeviceConfig(
+                string mpsDeviceId, string mpsUserId, string mpsPassword,
+                string tdServerIPAddress, string tdServerPortNumber, string tdServerUsername,
+                string tdServerPassword, string mpsVehicleStatusPassword, string fourWheelerParkingSpace,
+                string twoWheelerParkingSpace, string fourWheelerParkingRatePerHour, string twoWheelerParkingRatePerHour,
+                string lostTicketPenality
+            )
+        {
+            try
+            {
+                var query = string.Format(queries["UpdateMasterSettingsForMPSDeviceConfig"], mpsDeviceId, mpsUserId, mpsPassword,
+                    tdServerIPAddress, tdServerPortNumber, tdServerUsername, tdServerPassword, mpsVehicleStatusPassword, fourWheelerParkingSpace,
+                    twoWheelerParkingSpace, fourWheelerParkingRatePerHour, twoWheelerParkingRatePerHour, lostTicketPenality, MasterId);
+                sqlDataAccess.ExecuteNonQuery(query);
+
+            }
+            catch (Exception exception)
+            {
+                FileLogger.Log($"MPSDeviceConfig settings could not be updated successfully to database as : {exception.Message}");
+                throw;
+            }
+        }
+
+        public DataRow GetMasterSettingsForTDClientDeviceConfig()
+        {
+            try
+            {
+                var query = string.Format(queries["GetMasterSettingsForTDClientDeviceConfig"], MasterId);
+
+                var sqlCommand = sqlDataAccess.GetCommand(query);
+
+                var result = sqlDataAccess.Execute(sqlCommand);
+
+                return result.Rows[0];
+            }
+            catch (Exception exception)
+            {
+                FileLogger.Log($"GetMasterSettingsForTDClientDeviceConfig could not be loaded successfully from database as : {exception.Message}");
+                throw;
+            }
+
+        }
+
+        public DataRow GetMasterSettingsForMPSDeviceConfig()
+        {
+            try
+            {
+                var query = string.Format(queries["GetMasterSettingsForMPSDeviceConfig"], MasterId);
+
+                var sqlCommand = sqlDataAccess.GetCommand(query);
+
+                var result = sqlDataAccess.Execute(sqlCommand);
+
+                return result.Rows[0];
+            }
+            catch (Exception exception)
+            {
+                FileLogger.Log($"GetMasterSettingsForMPSDeviceConfig could not be loaded successfully from database as : {exception.Message}");
+                throw;
+            }
+
+        }
     }
 }
