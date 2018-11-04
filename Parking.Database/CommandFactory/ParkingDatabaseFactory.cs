@@ -223,7 +223,9 @@ namespace Parking.Database.CommandFactory
 
                 var sqlCommand = sqlDataAccess.GetCommand(query);
 
-                return sqlDataAccess.Execute(sqlCommand);
+                var result = sqlDataAccess.Execute(sqlCommand);
+
+                return result;
             }
             catch (Exception exception)
             {

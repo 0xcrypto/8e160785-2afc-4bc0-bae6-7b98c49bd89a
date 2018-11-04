@@ -113,12 +113,15 @@ namespace Parking
         {
             try
             {
-                gridViewManualPaySation.DataSource = _parkingDatabaseFactory.GetVehicleEntryDataForWebServerUpload();
+                var records = _parkingDatabaseFactory.GetVehicleEntryDataForWebServerUpload();
+                gridViewTicketDispenser.DataSource = records;
                 lblManualPaySationDataLastUpdated.Text = string.Format(@"Last Updated: {0}", DateTime.Now.ToString());
+                lblTotalTicketDispenserRecords.Text = string.Format(@"Total Records: {0}", records.Rows.Count.ToString());
+                lblTicketDispenserStatus.Text = "Data fetched successfully";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error fetching Ticket Dispenser Data", null, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblTicketDispenserStatus.Text = "Problem in fetching ticket dispenser data. Please try again later";
                 return;
             }
         }
@@ -129,10 +132,11 @@ namespace Parking
             {
                 gridViewManualPaySation.DataSource = _parkingDatabaseFactory.GetVehicleExitDataForWebServerUpload();
                 lblManualPaySationDataLastUpdated.Text = string.Format(@"Last Updated: {0}", DateTime.Now.ToString());
+                lblManualPayStationStatus.Text = "Data fetched successfully";
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error fetching Manual Pay Station Data", null, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblTicketDispenserStatus.Text = "Problem in fetching manual pay station data. Please try again later";
                 return;
             }
         }
@@ -172,13 +176,29 @@ namespace Parking
         private void btnLoadTicketDispenserData_Click(object sender, EventArgs e)
         {
             btnLoadTicketDispenserData.Enabled = false;
-            LoadTicketDispenserGridView();
+            lblTicketDispenserStatus.Text = "Please wait while fetching data...";
+            try
+            {
+                LoadTicketDispenserGridView();
+            }
+            catch(Exception ex)
+            {
+                btnLoadTicketDispenserData.Enabled = true;
+            }
         }
 
         private void btnLoadManualPayStationData_Click(object sender, EventArgs e)
         {
             btnLoadManualPayStationData.Enabled = false;
-            LoadManualPayStationGridView();
+            lblTicketDispenserStatus.Text = "Please wait while fetching data...";
+            try
+            {
+                LoadManualPayStationGridView();
+            }
+            catch (Exception ex)
+            {
+                btnLoadManualPayStationData.Enabled = true;
+            }
         }
     }
 }

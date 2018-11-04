@@ -30,19 +30,23 @@
         {
             this.tbcServer = new System.Windows.Forms.TabControl();
             this.tpServer1 = new System.Windows.Forms.TabPage();
+            this.btnLoadTicketDispenserData = new System.Windows.Forms.Button();
             this.cbAutoUploadTicketDispenserData = new System.Windows.Forms.CheckBox();
             this.btnTicketDispenserDataUpload = new System.Windows.Forms.Button();
             this.lblTicketDispenserDataLastUpdated = new System.Windows.Forms.Label();
             this.gridViewTicketDispenser = new System.Windows.Forms.DataGridView();
             this.tpServer2 = new System.Windows.Forms.TabPage();
+            this.btnLoadManualPayStationData = new System.Windows.Forms.Button();
             this.cbAutoUploadManualPayStationData = new System.Windows.Forms.CheckBox();
             this.btnManualPayStationDataUpload = new System.Windows.Forms.Button();
             this.lblManualPaySationDataLastUpdated = new System.Windows.Forms.Label();
             this.gridViewManualPaySation = new System.Windows.Forms.DataGridView();
             this.tpServer3 = new System.Windows.Forms.TabPage();
             this.tpServer4 = new System.Windows.Forms.TabPage();
-            this.btnLoadTicketDispenserData = new System.Windows.Forms.Button();
-            this.btnLoadManualPayStationData = new System.Windows.Forms.Button();
+            this.lblTotalTicketDispenserRecords = new System.Windows.Forms.Label();
+            this.lblTicketDispenserStatus = new System.Windows.Forms.Label();
+            this.lblManualPayStationStatus = new System.Windows.Forms.Label();
+            this.lblManualPayStationTotalRecords = new System.Windows.Forms.Label();
             this.tbcServer.SuspendLayout();
             this.tpServer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewTicketDispenser)).BeginInit();
@@ -59,11 +63,13 @@
             this.tbcServer.Location = new System.Drawing.Point(12, 12);
             this.tbcServer.Name = "tbcServer";
             this.tbcServer.SelectedIndex = 0;
-            this.tbcServer.Size = new System.Drawing.Size(776, 426);
+            this.tbcServer.Size = new System.Drawing.Size(776, 443);
             this.tbcServer.TabIndex = 0;
             // 
             // tpServer1
             // 
+            this.tpServer1.Controls.Add(this.lblTicketDispenserStatus);
+            this.tpServer1.Controls.Add(this.lblTotalTicketDispenserRecords);
             this.tpServer1.Controls.Add(this.btnLoadTicketDispenserData);
             this.tpServer1.Controls.Add(this.cbAutoUploadTicketDispenserData);
             this.tpServer1.Controls.Add(this.btnTicketDispenserDataUpload);
@@ -72,10 +78,20 @@
             this.tpServer1.Location = new System.Drawing.Point(4, 22);
             this.tpServer1.Name = "tpServer1";
             this.tpServer1.Padding = new System.Windows.Forms.Padding(3);
-            this.tpServer1.Size = new System.Drawing.Size(768, 400);
+            this.tpServer1.Size = new System.Drawing.Size(768, 417);
             this.tpServer1.TabIndex = 0;
             this.tpServer1.Text = "TD Client -> Server";
             this.tpServer1.UseVisualStyleBackColor = true;
+            // 
+            // btnLoadTicketDispenserData
+            // 
+            this.btnLoadTicketDispenserData.Location = new System.Drawing.Point(6, 10);
+            this.btnLoadTicketDispenserData.Name = "btnLoadTicketDispenserData";
+            this.btnLoadTicketDispenserData.Size = new System.Drawing.Size(73, 23);
+            this.btnLoadTicketDispenserData.TabIndex = 4;
+            this.btnLoadTicketDispenserData.Text = "Get Data";
+            this.btnLoadTicketDispenserData.UseVisualStyleBackColor = true;
+            this.btnLoadTicketDispenserData.Click += new System.EventHandler(this.btnLoadTicketDispenserData_Click);
             // 
             // cbAutoUploadTicketDispenserData
             // 
@@ -101,7 +117,7 @@
             // lblTicketDispenserDataLastUpdated
             // 
             this.lblTicketDispenserDataLastUpdated.AutoSize = true;
-            this.lblTicketDispenserDataLastUpdated.Location = new System.Drawing.Point(505, 21);
+            this.lblTicketDispenserDataLastUpdated.Location = new System.Drawing.Point(413, 16);
             this.lblTicketDispenserDataLastUpdated.Name = "lblTicketDispenserDataLastUpdated";
             this.lblTicketDispenserDataLastUpdated.Size = new System.Drawing.Size(77, 13);
             this.lblTicketDispenserDataLastUpdated.TabIndex = 1;
@@ -112,11 +128,13 @@
             this.gridViewTicketDispenser.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridViewTicketDispenser.Location = new System.Drawing.Point(6, 40);
             this.gridViewTicketDispenser.Name = "gridViewTicketDispenser";
-            this.gridViewTicketDispenser.Size = new System.Drawing.Size(755, 333);
+            this.gridViewTicketDispenser.Size = new System.Drawing.Size(755, 342);
             this.gridViewTicketDispenser.TabIndex = 0;
             // 
             // tpServer2
             // 
+            this.tpServer2.Controls.Add(this.lblManualPayStationStatus);
+            this.tpServer2.Controls.Add(this.lblManualPayStationTotalRecords);
             this.tpServer2.Controls.Add(this.btnLoadManualPayStationData);
             this.tpServer2.Controls.Add(this.cbAutoUploadManualPayStationData);
             this.tpServer2.Controls.Add(this.btnManualPayStationDataUpload);
@@ -125,10 +143,20 @@
             this.tpServer2.Location = new System.Drawing.Point(4, 22);
             this.tpServer2.Name = "tpServer2";
             this.tpServer2.Padding = new System.Windows.Forms.Padding(3);
-            this.tpServer2.Size = new System.Drawing.Size(768, 400);
+            this.tpServer2.Size = new System.Drawing.Size(768, 417);
             this.tpServer2.TabIndex = 1;
             this.tpServer2.Text = "MPS -> Server";
             this.tpServer2.UseVisualStyleBackColor = true;
+            // 
+            // btnLoadManualPayStationData
+            // 
+            this.btnLoadManualPayStationData.Location = new System.Drawing.Point(7, 13);
+            this.btnLoadManualPayStationData.Name = "btnLoadManualPayStationData";
+            this.btnLoadManualPayStationData.Size = new System.Drawing.Size(75, 23);
+            this.btnLoadManualPayStationData.TabIndex = 5;
+            this.btnLoadManualPayStationData.Text = "Get Data";
+            this.btnLoadManualPayStationData.UseVisualStyleBackColor = true;
+            this.btnLoadManualPayStationData.Click += new System.EventHandler(this.btnLoadManualPayStationData_Click);
             // 
             // cbAutoUploadManualPayStationData
             // 
@@ -154,7 +182,7 @@
             // lblManualPaySationDataLastUpdated
             // 
             this.lblManualPaySationDataLastUpdated.AutoSize = true;
-            this.lblManualPaySationDataLastUpdated.Location = new System.Drawing.Point(513, 23);
+            this.lblManualPaySationDataLastUpdated.Location = new System.Drawing.Point(423, 18);
             this.lblManualPaySationDataLastUpdated.Name = "lblManualPaySationDataLastUpdated";
             this.lblManualPaySationDataLastUpdated.Size = new System.Drawing.Size(77, 13);
             this.lblManualPaySationDataLastUpdated.TabIndex = 2;
@@ -165,7 +193,7 @@
             this.gridViewManualPaySation.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridViewManualPaySation.Location = new System.Drawing.Point(7, 42);
             this.gridViewManualPaySation.Name = "gridViewManualPaySation";
-            this.gridViewManualPaySation.Size = new System.Drawing.Size(755, 331);
+            this.gridViewManualPaySation.Size = new System.Drawing.Size(755, 340);
             this.gridViewManualPaySation.TabIndex = 0;
             // 
             // tpServer3
@@ -186,31 +214,48 @@
             this.tpServer4.Text = "MPS Settings";
             this.tpServer4.UseVisualStyleBackColor = true;
             // 
-            // btnLoadTicketDispenserData
+            // lblTotalTicketDispenserRecords
             // 
-            this.btnLoadTicketDispenserData.Location = new System.Drawing.Point(6, 10);
-            this.btnLoadTicketDispenserData.Name = "btnLoadTicketDispenserData";
-            this.btnLoadTicketDispenserData.Size = new System.Drawing.Size(73, 23);
-            this.btnLoadTicketDispenserData.TabIndex = 4;
-            this.btnLoadTicketDispenserData.Text = "Get Data";
-            this.btnLoadTicketDispenserData.UseVisualStyleBackColor = true;
-            this.btnLoadTicketDispenserData.Click += new System.EventHandler(this.btnLoadTicketDispenserData_Click);
+            this.lblTotalTicketDispenserRecords.AutoSize = true;
+            this.lblTotalTicketDispenserRecords.Location = new System.Drawing.Point(7, 395);
+            this.lblTotalTicketDispenserRecords.Name = "lblTotalTicketDispenserRecords";
+            this.lblTotalTicketDispenserRecords.Size = new System.Drawing.Size(86, 13);
+            this.lblTotalTicketDispenserRecords.TabIndex = 5;
+            this.lblTotalTicketDispenserRecords.Text = "Total Records: 0";
             // 
-            // btnLoadManualPayStationData
+            // lblTicketDispenserStatus
             // 
-            this.btnLoadManualPayStationData.Location = new System.Drawing.Point(7, 13);
-            this.btnLoadManualPayStationData.Name = "btnLoadManualPayStationData";
-            this.btnLoadManualPayStationData.Size = new System.Drawing.Size(75, 23);
-            this.btnLoadManualPayStationData.TabIndex = 5;
-            this.btnLoadManualPayStationData.Text = "Get Data";
-            this.btnLoadManualPayStationData.UseVisualStyleBackColor = true;
-            this.btnLoadManualPayStationData.Click += new System.EventHandler(this.btnLoadManualPayStationData_Click);
+            this.lblTicketDispenserStatus.AutoSize = true;
+            this.lblTicketDispenserStatus.Location = new System.Drawing.Point(416, 395);
+            this.lblTicketDispenserStatus.Name = "lblTicketDispenserStatus";
+            this.lblTicketDispenserStatus.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lblTicketDispenserStatus.Size = new System.Drawing.Size(13, 13);
+            this.lblTicketDispenserStatus.TabIndex = 6;
+            this.lblTicketDispenserStatus.Text = "_";
+            // 
+            // lblManualPayStationStatus
+            // 
+            this.lblManualPayStationStatus.AutoSize = true;
+            this.lblManualPayStationStatus.Location = new System.Drawing.Point(423, 396);
+            this.lblManualPayStationStatus.Name = "lblManualPayStationStatus";
+            this.lblManualPayStationStatus.Size = new System.Drawing.Size(13, 13);
+            this.lblManualPayStationStatus.TabIndex = 8;
+            this.lblManualPayStationStatus.Text = "_";
+            // 
+            // lblManualPayStationTotalRecords
+            // 
+            this.lblManualPayStationTotalRecords.AutoSize = true;
+            this.lblManualPayStationTotalRecords.Location = new System.Drawing.Point(6, 396);
+            this.lblManualPayStationTotalRecords.Name = "lblManualPayStationTotalRecords";
+            this.lblManualPayStationTotalRecords.Size = new System.Drawing.Size(86, 13);
+            this.lblManualPayStationTotalRecords.TabIndex = 7;
+            this.lblManualPayStationTotalRecords.Text = "Total Records: 0";
             // 
             // TicketDispenserServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 467);
             this.Controls.Add(this.tbcServer);
             this.Name = "TicketDispenserServerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -245,6 +290,10 @@
         private System.Windows.Forms.CheckBox cbAutoUploadManualPayStationData;
         private System.Windows.Forms.Button btnLoadTicketDispenserData;
         private System.Windows.Forms.Button btnLoadManualPayStationData;
+        private System.Windows.Forms.Label lblTotalTicketDispenserRecords;
+        private System.Windows.Forms.Label lblTicketDispenserStatus;
+        private System.Windows.Forms.Label lblManualPayStationStatus;
+        private System.Windows.Forms.Label lblManualPayStationTotalRecords;
     }
 }
 
