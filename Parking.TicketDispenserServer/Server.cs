@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 using Parking.Common;
 using Parking.Common.Enums;
 
@@ -23,6 +25,7 @@ namespace Parking
         public TicketDispenserServerForm()
         {
             InitializeComponent();
+
             _parkingDatabaseFactory = new ParkingDatabaseFactory(Common.Enums.Application.TickerDispenserServer);
         }
         
@@ -260,48 +263,160 @@ namespace Parking
         {
             try
             {
+                string MPSDeviceId = txtMPSDeviceId.Text.Trim().ToString();
+                string MPSUserId = txtMPSUserId.Text.Trim().ToString();
+                string MPSPassword = txtMPSPassword.Text.Trim().ToString();
+                string MPSTDServerIPAddress = txtMPSTDServerIPAddress.Text.Trim().ToString();
+                string MPSTDServerPortNumber = txtMPSTDServerPortNumber.Text.Trim().ToString();
+                string MPSTDServerUsername = txtMPSTDServerUsername.Text.Trim().ToString();
+                string MPSTDServerPassword = txtMPSTDServerPassword.Text.Trim().ToString();
+                string VehicleStatusPassword = txtVehicleStatusPassword.Text.Trim().ToString();
+                string MPSFourWheelerParkingSpace = txtMPSFourWheelerParkingSpace.Text.Trim().ToString();
+                string MPSTwoWheelerParkingSpace = txtMPSTwoWheelerParkingSpace.Text.Trim().ToString();
+                string MPSFourWheelerParkingRate = txtMPSFourWheelerParkingRate.Text.Trim().ToString();
+                string MPSTwoWheelerParkingRate = txtMPSTwoWheelerParkingRate.Text.Trim().ToString();
+                string MPSLostTicketPenality = txtMPSLostTicketPenality.Text.Trim().ToString();
+
                 _parkingDatabaseFactory.UpdateMasterSettingsForMPSDeviceConfig(
-                        txtMPSDeviceId.Text.ToString(),
-                        txtMPSUserId.Text.ToString(),
-                        txtMPSPassword.Text.ToString(),
-                        txtMPSTDServerIPAddress.Text.ToString(),
-                        txtMPSTDServerPortNumber.Text.ToString(),
-                        txtMPSTDServerUsername.Text.ToString(),
-                        txtMPSTDServerPassword.Text.ToString(),
-                        txtVehicleStatusPassword.Text.ToString(),
-                        txtMPSFourWheelerParkingSpace.Text.ToString(),
-                        txtMPSTwoWheelerParkingSpace.Text.ToString(),
-                        txtMPSFourWheelerParkingRate.Text.ToString(),
-                        txtMPSTwoWheelerParkingRate.Text.ToString(),
-                        txtMPSLostTicketPenality.Text.ToString());
+                        MPSDeviceId,
+                        MPSUserId,
+                        MPSPassword,
+                        MPSTDServerIPAddress,
+                        MPSTDServerPortNumber,
+                        MPSTDServerUsername,
+                        MPSTDServerPassword,
+                        VehicleStatusPassword,
+                        MPSFourWheelerParkingSpace,
+                        MPSTwoWheelerParkingSpace,
+                        MPSFourWheelerParkingRate,
+                        MPSTwoWheelerParkingRate,
+                        MPSLostTicketPenality);
+
+                ManualPayStationSettings setting = new ManualPayStationSettings();
+                setting.DeviceId = MPSDeviceId;
+                setting.UserId = MPSUserId;
+                setting.Password = MPSPassword;
+                setting.TdServerIPAddress = MPSTDServerIPAddress;
+                setting.TdServerPort = MPSTDServerPortNumber;
+                setting.TdServerUsername = MPSTDServerUsername;
+                setting.TdServerPassword = MPSTDServerPassword;
+                setting.VehicleStatusPassword = VehicleStatusPassword;
+                setting.FourWheelerParkingSpace = MPSFourWheelerParkingSpace;
+                setting.TwoWheelerParkingSpace = MPSTwoWheelerParkingSpace;
+                setting.FourWheelerParkingRate = MPSFourWheelerParkingRate;
+                setting.TwoWheelerParkingRate = MPSTwoWheelerParkingRate;
+                setting.LostTicketPenality = MPSLostTicketPenality;
+
+                SaveFileDialog sfdManualPayStation = new SaveFileDialog
+                {
+                    InitialDirectory = @"C:\",
+                    Title = "Save Ticket Dispenser (DeviceConfig.json)",
+                    CheckFileExists = false,
+                    CheckPathExists = false,
+                    DefaultExt = "json",
+                    FileName = "DeviceConfig.json",
+                    Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                    FilterIndex = 1,
+                    RestoreDirectory = true
+                };
+
+                if (sfdManualPayStation.ShowDialog() == DialogResult.OK)
+                {
+                    string manualPayStationDeviceConfigFileName = sfdManualPayStation.FileName;
+                    string json = JsonConvert.SerializeObject(setting);
+                    File.WriteAllText(manualPayStationDeviceConfigFileName, json);
+                    MessageBox.Show("Manual Pay Station DeviceConfig.json successfully created");
+                }
             }
-            catch (Exception ex) { }
+            catch (Exception exception) {
+                FileLogger.Log($"Problem saving manual pay station DeviceConfig.json as : {exception.Message} ");
+            }
         }
 
         private void btnTDClientGenerateDeviceConfig_Click(object sender, EventArgs e)
         {
             try
             {
+                var TDClientDeviceId = txtTDClientDeviceId.Text.Trim().ToString();
+                var TDClientUserId = txtTDClientUserId.Text.Trim().ToString();
+                var TDClientPassword = txtTDClientPassword.Text.Trim().ToString();
+                var TDClientLongLat = txtTDClientLongLat.Text.Trim().ToString();
+                var TDClientPLCBoardNumber = txtTDClientPLCBoardNumber.Text.Trim().ToString();
+                var TDClientDriverCameraIPAddress = txtTDClientDriverCameraIPAddress.Text.Trim().ToString();
+                var TDClientDriverCameraUsername = txtTDClientDriverCameraUsername.Text.Trim().ToString();
+                var TDClientDriverCameraPassword = txtTDClientDriverCameraPassword.Text.Trim().ToString();
+                var TDClientVehicleCameraIPAddress = txtTDClientVehicleCameraIPAddress.Text.Trim().ToString();
+                var TDClientVehicleCameraUsername = txtTDClientVehicleCameraUsername.Text.Trim().ToString();
+                var TDClientVehicleCameraPassword = txtTDClientVehicleCameraPassword.Text.Trim().ToString();
+                var TDClientTDServerIPAddress = txtTDClientTDServerIPAddress.Text.Trim().ToString();
+                var TDClientTDServerPortNumber = txtTDClientTDServerPortNumber.Text.Trim().ToString();
+                var TDClientTDServerUsername = txtTDClientTDServerUsername.Text.Trim().ToString();
+                var TDClientTDServerPassword = txtTDClientTDServerPassword.Text.Trim().ToString();
+                var TDClientFourWheelerParkingSpace = txtTDClientFourWheelerParkingSpace.Text.Trim().ToString();
+                var TDClientTwoWheelerParkingSpace = txtTDClientTwoWheelerParkingSpace.Text.Trim().ToString();
+
+                TickerDispenserClientSettings setting = new TickerDispenserClientSettings();
+                setting.DeviceId = TDClientDeviceId;
+                setting.UserId = TDClientUserId;
+                setting.Password = TDClientPassword;
+                setting.LongLat = TDClientLongLat;
+                setting.PLCBoardPortNumber = TDClientPLCBoardNumber;
+                setting.DriverCameraIPAddress = TDClientDriverCameraIPAddress;
+                setting.DriverCameraUsername = TDClientDriverCameraUsername;
+                setting.DriverCameraPassword = TDClientDriverCameraPassword;
+                setting.VehicleCameraIPAddress = TDClientVehicleCameraIPAddress;
+                setting.VehicleCameraUsername = TDClientVehicleCameraUsername;
+                setting.VehicleCameraPassword = TDClientVehicleCameraPassword;
+                setting.TdServerIPAddress = TDClientTDServerIPAddress;
+                setting.TdServerPort = TDClientTDServerPortNumber;
+                setting.TdServerUsername = TDClientTDServerUsername;
+                setting.TdServerPassword = TDClientTDServerPassword;
+                setting.FourWheelerParkingSpace = TDClientFourWheelerParkingSpace;
+                setting.TwoWheelerParkingSpace = TDClientTwoWheelerParkingSpace;
+
                 _parkingDatabaseFactory.UpdateMasterSettingsForTDClientDeviceConfig(
-                    txtTDClientDeviceId.Text.ToString(),
-                    txtTDClientUserId.Text.ToString(),
-                    txtTDClientPassword.Text.ToString(),
-                    txtTDClientLongLat.Text.ToString(),
-                    txtTDClientPLCBoardNumber.Text.ToString(),
-                    txtTDClientDriverCameraIPAddress.Text.ToString(),
-                    txtTDClientDriverCameraUsername.Text.ToString(),
-                    txtTDClientDriverCameraPassword.Text.ToString(),
-                    txtTDClientVehicleCameraIPAddress.Text.ToString(),
-                    txtTDClientVehicleCameraUsername.Text.ToString(),
-                    txtTDClientVehicleCameraPassword.Text.ToString(),
-                    txtTDClientTDServerIPAddress.Text.ToString(),
-                    txtTDClientTDServerPortNumber.Text.ToString(),
-                    txtTDClientTDServerUsername.Text.ToString(),
-                    txtTDClientTDServerPassword.Text.ToString(),
-                    txtTDClientFourWheelerParkingSpace.Text.ToString(),
-                    txtTDClientTwoWheelerParkingSpace.Text.ToString());
+                    TDClientDeviceId,
+                    TDClientUserId,
+                    TDClientPassword,
+                    TDClientLongLat,
+                    TDClientPLCBoardNumber,
+                    TDClientDriverCameraIPAddress,
+                    TDClientDriverCameraUsername,
+                    TDClientDriverCameraPassword,
+                    TDClientVehicleCameraIPAddress,
+                    TDClientVehicleCameraUsername,
+                    TDClientVehicleCameraPassword,
+                    TDClientTDServerIPAddress,
+                    TDClientTDServerPortNumber,
+                    TDClientTDServerUsername,
+                    TDClientTDServerPassword,
+                    TDClientFourWheelerParkingSpace,
+                    TDClientTwoWheelerParkingSpace);
+
+                SaveFileDialog sfdTickerDispenser = new SaveFileDialog
+                {
+                    InitialDirectory = @"C:\",
+                    Title = "Save Manual Pay Station (DeviceConfig.json)",
+                    CheckFileExists = false,
+                    CheckPathExists = false,
+                    DefaultExt = "json",
+                    FileName = "DeviceConfig.json",
+                    Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                    FilterIndex = 1,
+                    RestoreDirectory = true
+                };
+
+                if (sfdTickerDispenser.ShowDialog() == DialogResult.OK)
+                {
+                    string ticketDispenserDeviceConfigFileName = sfdTickerDispenser.FileName;
+                    string json = JsonConvert.SerializeObject(setting);
+                    File.WriteAllText(ticketDispenserDeviceConfigFileName, json);
+                    MessageBox.Show("Ticket dispenser DeviceConfig.json successfully created");
+                }
             }
-            catch(Exception ex) { }
+            catch(Exception exception) {
+                FileLogger.Log($"Problem saving ticket dispenser DeviceConfig.json as : {exception.Message} ");
+            }
         }
     }
 }
