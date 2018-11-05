@@ -1,6 +1,6 @@
 ﻿using System.IO.Ports;
 
-namespace Parking.Interfaces
+namespace Parking.Common
 {
     public interface ISerialPortCommunicate
     {

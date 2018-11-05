@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO.Ports;
 using Parking.Common;
-using Parking.Interfaces;
 
-namespace Parking.PortCommunicate
+namespace Parking.Common
 {
     public class SerialPortCommunicate : ISerialPortCommunicate
     {

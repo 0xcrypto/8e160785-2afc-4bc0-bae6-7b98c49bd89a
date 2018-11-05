@@ -2,7 +2,7 @@
 using System;
 using System.Data;
 
-namespace Parking.Interfaces
+namespace Parking.Common
 {
     public interface IParkingDatabaseFactory
     {

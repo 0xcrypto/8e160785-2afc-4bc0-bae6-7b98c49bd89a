@@ -2,9 +2,9 @@
 using System.Data;
 using System.Data.SqlClient;
 using Parking.Common;
-using Parking.Interfaces;
+using Parking.Common.Enums;
 
-namespace Parking.Database
+namespace Parking.Common
 {
     /// <summary>
     /// SqlDataAccess is being used for accessing MSSQL database quickly and easily. 
@@ -15,16 +15,19 @@ namespace Parking.Database
     {
         // Default connection string. a connection named MsSql should be defined in web.config file.
         public const string ConnectionStringName = "MsSql";
-
         //This returns the connection string  
-        private static string DefaultConnectionString = ConstructConnectionStringWithServerDetails();
+        private static string DefaultConnectionString;
+
+        public SqlDataAccess(Application application)
+        {
+            DefaultConnectionString = ConstructConnectionStringWithServerDetails(application);
+        }
         public SqlCommand GetCommand(string sql)
         {
-            var conn = new SqlConnection(ConnectionString);
+            var conn = new SqlConnection(DefaultConnectionString);
             var sqlCmd = new SqlCommand(sql, conn);
             return sqlCmd;
         }
-
         public DataTable Execute(string sql)
         {
             try
@@ -42,7 +45,6 @@ namespace Parking.Database
                 throw;
             }           
         }
-
         public DataTable Execute(SqlCommand command)
         {
             try
@@ -60,7 +62,6 @@ namespace Parking.Database
                 throw;
             }
         }
-
         public int ExecuteNonQuery(string sql)
         {
             try
@@ -93,7 +94,6 @@ namespace Parking.Database
                 throw;
             }
         }
-
         public int ExecuteNonQuery(SqlCommand command)
         {
             try
@@ -109,7 +109,6 @@ namespace Parking.Database
                 throw;
             }
         }
-
         public int ExecuteStoredProcedure(string spName)
         {
             try
@@ -128,7 +127,6 @@ namespace Parking.Database
                 throw;
             }
         }      
-
         public int ExecuteStoredProcedure(SqlCommand command)
         {
             try
@@ -145,13 +143,12 @@ namespace Parking.Database
                 throw;
             }
         }
-
         public DataTable ExecuteDataReturningStoredProcedure(SqlCommand command)
         {
             try
             {
                 var result = new DataTable();
-                command.Connection = new SqlConnection(ConnectionString);
+                command.Connection = new SqlConnection(DefaultConnectionString);
                 command.CommandType = CommandType.StoredProcedure;
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                 command.Connection.Open();
@@ -165,27 +162,26 @@ namespace Parking.Database
                 throw;
             }
         }
-        
-        public string ConnectionString
-        {
-            get
-            {
-                if (DefaultConnectionString == string.Empty)
-                {
-                    DefaultConnectionString = ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString;
-                }
-                return DefaultConnectionString;
-            }
-            set { }
-        }
-
-        private static string ConstructConnectionStringWithServerDetails()
+        private static string ConstructConnectionStringWithServerDetails(Application application)
         {
             try
             {
-                var settings = TicketDispenserConfigurationReader.GetConfigurationSettings();
-
-                var connectionString = $"Data Source = {settings.IPAddress},{settings.Port}; Network Library = DBMSSOCN; Initial Catalog = db_Parking; User ID = {settings.Username}; Password = {settings.Password};";
+                string connectionString = null;
+                switch (application)
+                {
+                    case Application.TicketDispenserClient:
+                        var settings = (TickerDispenserClientSettings)ConfigurationReader.GetConfigurationSettings(application);
+                        connectionString = $"Data Source = {settings.TdServerIPAddress},{settings.TdServerPort}; Network Library = DBMSSOCN; Initial Catalog = db_Parking; User ID = {settings.TdServerUsername}; Password = {settings.TdServerPassword};";
+                    break;
+                    case Application.TickerDispenserServer:
+                        var tdServerSettings = (TicketDispenserServerSettings)ConfigurationReader.GetConfigurationSettings(application);
+                        connectionString = $"Data Source = {tdServerSettings.IPAddress},{tdServerSettings.Port}; Network Library = DBMSSOCN; Initial Catalog = db_Parking; User ID = {tdServerSettings.Username}; Password = {tdServerSettings.Password};";
+                    break;
+                    case Application.ManualPayStation:
+                        var mpsSettings = (ManualPayStationSettings)ConfigurationReader.GetConfigurationSettings(application);
+                        connectionString = $"Data Source = {mpsSettings.TdServerIPAddress},{mpsSettings.TdServerPort}; Network Library = DBMSSOCN; Initial Catalog = db_Parking; User ID = {mpsSettings.TdServerUsername}; Password = {mpsSettings.TdServerPassword};";
+                        break;
+                }
 
                 return connectionString;
             }

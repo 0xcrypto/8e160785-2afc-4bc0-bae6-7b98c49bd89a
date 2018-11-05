@@ -65,18 +65,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TicketDispenserConfigurationReader.cs" />
+    <Compile Include="ConfigurationReader.cs" />
+    <Compile Include="Enums\Application.cs" />
     <Compile Include="Enums\DocumentType.cs" />
     <Compile Include="Enums\VehicleType.cs" />
+    <Compile Include="IParkingDatabaseFactory.cs" />
+    <Compile Include="ISerialPortCommunicate.cs" />
+    <Compile Include="ISqlDataAccess.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="MPSSettings.cs" />
-    <Compile Include="TicketDispenserServerSettings.cs" />
+    <Compile Include="Model\ManualPayStationSettings.cs" />
+    <Compile Include="Model\TickerDispenserClientSettings.cs" />
+    <Compile Include="Model\TicketDispenserServerSettings.cs" />
     <Compile Include="Model\Ticket.cs" />
     <Compile Include="IPCamera.cs" />
+    <Compile Include="ParkingDatabaseFactory.cs" />
     <Compile Include="Printer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QRCode.cs" />
     <Compile Include="Security.cs" />
+    <Compile Include="SerialPortCommunicate.cs" />
+    <Compile Include="SqlDataAccess.cs" />
     <Compile Include="UniqueCode.cs" />
   </ItemGroup>
   <ItemGroup>

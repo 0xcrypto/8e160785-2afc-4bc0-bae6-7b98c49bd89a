@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 
-namespace Parking.Interfaces
+namespace Parking.Common
 {
     public interface ISqlDataAccess
     {
@@ -64,7 +64,6 @@ namespace Parking.Interfaces
         /// <summary>
         /// 
         /// </summary>
-        string ConnectionString { get; set; }
 
         object ExecuteNonQueryReturnsIdentity(string sql);
     }

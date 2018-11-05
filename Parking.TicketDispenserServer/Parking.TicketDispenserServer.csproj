@@ -84,22 +84,6 @@
       <Project>{0606507d-1f91-45cd-89b2-8ef5ddefe7ec}</Project>
       <Name>Parking.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Parking.Database\Parking.Database.csproj">
-      <Project>{11341886-b081-4436-97c1-8f070ee65c31}</Project>
-      <Name>Parking.Database</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Parking.Interfaces\Parking.Interfaces.csproj">
-      <Project>{d4dd30ab-03c0-4fe5-a541-baf8b53f4f90}</Project>
-      <Name>Parking.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Parking.SerialPort\Parking.PortCommunicate.csproj">
-      <Project>{cbad1054-ce00-4732-abd0-d8478619a1e0}</Project>
-      <Name>Parking.PortCommunicate</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Parking.Utilities\Parking.Utilities.csproj">
-      <Project>{61f16ebb-c8ba-466d-9da4-e07e1a5f472e}</Project>
-      <Name>Parking.Utilities</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

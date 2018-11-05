@@ -1,5 +1,4 @@
-﻿using Parking.Database.CommandFactory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Parking.Common;
+using Parking.Common.Enums;
 
 namespace Parking
 {
@@ -22,7 +23,7 @@ namespace Parking
         public TicketDispenserServerForm()
         {
             InitializeComponent();
-            _parkingDatabaseFactory = new ParkingDatabaseFactory();
+            _parkingDatabaseFactory = new ParkingDatabaseFactory(Common.Enums.Application.TickerDispenserServer);
         }
         
         private void Form1_Load(object sender, EventArgs e)

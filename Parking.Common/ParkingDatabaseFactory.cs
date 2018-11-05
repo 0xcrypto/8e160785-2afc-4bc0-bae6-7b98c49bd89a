@@ -1,12 +1,12 @@
-﻿using Parking.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using Parking.Common;
-using Parking.Common.Model;
 using System.Data.SqlClient;
+using Parking.Common.Enums;
+using Parking.Common.Model;
 
-namespace Parking.Database.CommandFactory
+namespace Parking.Common
 {
     public class ParkingDatabaseFactory : IParkingDatabaseFactory
     {
@@ -14,9 +14,9 @@ namespace Parking.Database.CommandFactory
         private readonly Dictionary<string, string> queries = new Dictionary<string, string>();
         private const string MasterId = "4D587294-4DC1-421A-8FB5-D5DE9FB0ED4A";
 
-        public ParkingDatabaseFactory()
+        public ParkingDatabaseFactory(Application application)
         {
-            sqlDataAccess = new SqlDataAccess();
+            sqlDataAccess = new SqlDataAccess(application);
             queries.Add("SelectMasterSettings", @"SELECT  [CompanyName],
                                                           [ParkingPlaceCode],
                                                           [ParkingPlaceName],
