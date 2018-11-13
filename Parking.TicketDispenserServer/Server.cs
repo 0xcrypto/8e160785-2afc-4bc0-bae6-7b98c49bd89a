@@ -236,23 +236,23 @@ namespace Parking
         {
             try
             {
-                var TDClientDeviceId = txtTDClientDeviceId.Text.Trim().ToString();
-                var TDClientUserId = txtTDClientUserId.Text.Trim().ToString();
-                var TDClientPassword = txtTDClientPassword.Text.Trim().ToString();
-                var TDClientLongLat = txtTDClientLongLat.Text.Trim().ToString();
-                var TDClientPLCBoardNumber = txtTDClientPLCBoardNumber.Text.Trim().ToString();
-                var TDClientDriverCameraIPAddress = txtTDClientDriverCameraIPAddress.Text.Trim().ToString();
-                var TDClientDriverCameraUsername = txtTDClientDriverCameraUsername.Text.Trim().ToString();
-                var TDClientDriverCameraPassword = txtTDClientDriverCameraPassword.Text.Trim().ToString();
-                var TDClientVehicleCameraIPAddress = txtTDClientVehicleCameraIPAddress.Text.Trim().ToString();
-                var TDClientVehicleCameraUsername = txtTDClientVehicleCameraUsername.Text.Trim().ToString();
-                var TDClientVehicleCameraPassword = txtTDClientVehicleCameraPassword.Text.Trim().ToString();
-                var TDClientTDServerIPAddress = txtTDClientTDServerIPAddress.Text.Trim().ToString();
-                var TDClientTDServerPortNumber = txtTDClientTDServerPortNumber.Text.Trim().ToString();
-                var TDClientTDServerUsername = txtTDClientTDServerUsername.Text.Trim().ToString();
-                var TDClientTDServerPassword = txtTDClientTDServerPassword.Text.Trim().ToString();
-                var TDClientFourWheelerParkingSpace = txtTDClientFourWheelerParkingSpace.Text.Trim().ToString();
-                var TDClientTwoWheelerParkingSpace = txtTDClientTwoWheelerParkingSpace.Text.Trim().ToString();
+                string TDClientDeviceId = txtTDClientDeviceId.Text.Trim().ToString();
+                string TDClientUserId = txtTDClientUserId.Text.Trim().ToString();
+                string TDClientPassword = txtTDClientPassword.Text.Trim().ToString();
+                string TDClientLongLat = txtTDClientLongLat.Text.Trim().ToString();
+                string TDClientPLCBoardNumber = txtTDClientPLCBoardNumber.Text.Trim().ToString();
+                string TDClientDriverCameraIPAddress = txtTDClientDriverCameraIPAddress.Text.Trim().ToString();
+                string TDClientDriverCameraUsername = txtTDClientDriverCameraUsername.Text.Trim().ToString();
+                string TDClientDriverCameraPassword = txtTDClientDriverCameraPassword.Text.Trim().ToString();
+                string TDClientVehicleCameraIPAddress = txtTDClientVehicleCameraIPAddress.Text.Trim().ToString();
+                string TDClientVehicleCameraUsername = txtTDClientVehicleCameraUsername.Text.Trim().ToString();
+                string TDClientVehicleCameraPassword = txtTDClientVehicleCameraPassword.Text.Trim().ToString();
+                string TDClientTDServerIPAddress = txtTDClientTDServerIPAddress.Text.Trim().ToString();
+                int TDClientTDServerPortNumber = (int)Convert.ToInt32(txtTDClientTDServerPortNumber.Text.Trim().ToString());
+                string TDClientTDServerUsername = txtTDClientTDServerUsername.Text.Trim().ToString();
+                string TDClientTDServerPassword = txtTDClientTDServerPassword.Text.Trim().ToString();
+                int TDClientFourWheelerParkingSpace = (int)Convert.ToInt32(txtTDClientFourWheelerParkingSpace.Text.Trim().ToString());
+                int TDClientTwoWheelerParkingSpace = (int)Convert.ToInt32(txtTDClientTwoWheelerParkingSpace.Text.Trim().ToString());
 
                 TickerDispenserClientSettings setting = new TickerDispenserClientSettings();
                 setting.DeviceId = TDClientDeviceId;
@@ -353,15 +353,15 @@ namespace Parking
                 string MPSUserId = txtMPSUserId.Text.Trim().ToString();
                 string MPSPassword = txtMPSPassword.Text.Trim().ToString();
                 string MPSTDServerIPAddress = txtMPSTDServerIPAddress.Text.Trim().ToString();
-                string MPSTDServerPortNumber = txtMPSTDServerPortNumber.Text.Trim().ToString();
+                int MPSTDServerPortNumber = (int)Convert.ToInt32(txtMPSTDServerPortNumber.Text.Trim().ToString());
                 string MPSTDServerUsername = txtMPSTDServerUsername.Text.Trim().ToString();
                 string MPSTDServerPassword = txtMPSTDServerPassword.Text.Trim().ToString();
                 string VehicleStatusPassword = txtVehicleStatusPassword.Text.Trim().ToString();
-                string MPSFourWheelerParkingSpace = txtMPSFourWheelerParkingSpace.Text.Trim().ToString();
-                string MPSTwoWheelerParkingSpace = txtMPSTwoWheelerParkingSpace.Text.Trim().ToString();
-                string MPSFourWheelerParkingRate = txtMPSFourWheelerParkingRate.Text.Trim().ToString();
-                string MPSTwoWheelerParkingRate = txtMPSTwoWheelerParkingRate.Text.Trim().ToString();
-                string MPSLostTicketPenality = txtMPSLostTicketPenality.Text.Trim().ToString();
+                int MPSFourWheelerParkingSpace = (int)Convert.ToInt32(txtMPSFourWheelerParkingSpace.Text.Trim().ToString());
+                int MPSTwoWheelerParkingSpace = (int)Convert.ToInt32(txtMPSTwoWheelerParkingSpace.Text.Trim().ToString());
+                float MPSFourWheelerParkingRate = (float)Convert.ToDouble(txtMPSFourWheelerParkingRate.Text.Trim().ToString());
+                float MPSTwoWheelerParkingRate = (float)Convert.ToDouble(txtMPSTwoWheelerParkingRate.Text.Trim().ToString());
+                float MPSLostTicketPenality = (float)Convert.ToDouble(txtMPSLostTicketPenality.Text.Trim().ToString());
 
                 _parkingDatabaseFactory.UpdateMasterSettingsForMPSDeviceConfig(
                         MPSDeviceId,

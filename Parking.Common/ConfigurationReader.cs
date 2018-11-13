@@ -8,8 +8,6 @@ namespace Parking.Common
     {
         private const string configurationFileName = "DeviceConfig.json";
         private static readonly string ConfigFilePath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Substring(8)), configurationFileName);
-
-        //TD Specific
         private static object settings = null;
         private static readonly object FileLock = new object();
 

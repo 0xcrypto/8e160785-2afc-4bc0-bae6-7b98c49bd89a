@@ -359,8 +359,8 @@ namespace Parking.Common
                 string tdClientLongLat, string tdClientPLCBoardPortNumber, string tdClientDriverCameraIPAddress,
                 string tdClientDriverCameraUserId, string tdClientDriverCameraPassword, string tdClientVehicleCameraIPAddress,
                 string tdClientVehicleCameraUserId, string tdClientVehicleCameraPassword, string tdServerIPAddress,
-                string tdServerPortNumber, string tdServerUsername, string tdServerPassword,
-                string fourWheelerParkingSpace, string twoWheelerParkingSpace
+                int tdServerPortNumber, string tdServerUsername, string tdServerPassword,
+                int fourWheelerParkingSpace, int twoWheelerParkingSpace
             )
         {
             try
@@ -382,10 +382,10 @@ namespace Parking.Common
 
         public void UpdateMasterSettingsForMPSDeviceConfig(
                 string mpsDeviceId, string mpsUserId, string mpsPassword,
-                string tdServerIPAddress, string tdServerPortNumber, string tdServerUsername,
-                string tdServerPassword, string mpsVehicleStatusPassword, string fourWheelerParkingSpace,
-                string twoWheelerParkingSpace, string fourWheelerParkingRatePerHour, string twoWheelerParkingRatePerHour,
-                string lostTicketPenality
+                string tdServerIPAddress, int tdServerPortNumber, string tdServerUsername,
+                string tdServerPassword, string mpsVehicleStatusPassword, int fourWheelerParkingSpace,
+                int twoWheelerParkingSpace, float fourWheelerParkingRatePerHour, float twoWheelerParkingRatePerHour,
+                float lostTicketPenality
             )
         {
             try
