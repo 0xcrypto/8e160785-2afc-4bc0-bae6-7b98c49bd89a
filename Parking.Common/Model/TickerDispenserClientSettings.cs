@@ -19,10 +19,10 @@ namespace Parking.Common
         public string VehicleCameraUsername { get; set; }
         public string VehicleCameraPassword { get; set; }
         public string TdServerIPAddress { get; set; }
-        public string TdServerPort { get; set; }
+        public int TdServerPort { get; set; }
         public string TdServerUsername { get; set; }
         public string TdServerPassword { get; set; }
-        public string FourWheelerParkingSpace { get; set; }
-        public string TwoWheelerParkingSpace { get; set; }
+        public int FourWheelerParkingSpace { get; set; }
+        public int TwoWheelerParkingSpace { get; set; }
     }
 }
