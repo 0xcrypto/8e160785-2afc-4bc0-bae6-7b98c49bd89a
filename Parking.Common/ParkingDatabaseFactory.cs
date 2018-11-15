@@ -145,10 +145,16 @@ namespace Parking.Common
             queries.Add("GetVehicleEntryWebServerUploadData", @"SELECT [Id], [TDClientDeviceId], [TicketNumber], [ValidationNumber], [VehicleNumber], 
                             [VehicleType], [EntryTime] FROM [tbl_parking] WHERE [IsParkingEntryDetailsUploadedToServer] = 0");
 
+            queries.Add("GetVehicleEntryWebServerUploadDataWithInterval", @"SELECT [Id], [TDClientDeviceId], [TicketNumber], [ValidationNumber], [VehicleNumber], 
+                            [VehicleType], [EntryTime] FROM [tbl_parking] WHERE [IsParkingEntryDetailsUploadedToServer] = 0 AND [EntryTime] >= DATEADD(SECOND, -30,  GETDATE())");
+
             queries.Add("UpdateVehicleEntryWebServerUploadStatus", @"UPDATE [tbl_parking] SET [IsParkingEntryDetailsUploadedToServer] = 1 WHERE [Id] = '{0}'");
 
             queries.Add("GetVehicleExitWebServerUploadData", @"SELECT [Id], [MPSDeviceId], [TicketNumber], [ExitTime], [ParkingDuration], [ParkingCharge], 
                             [PenalityCharge], [TotalPaidAmount] FROM [tbl_parking] WHERE [IsParkingEntryDetailsUploadedToServer] = 1 AND [IsParkingExitDetailsUploadedToServer] = 0 ");
+
+            queries.Add("GetVehicleExitWebServerUploadDataWithInterval", @"SELECT [Id], [MPSDeviceId], [TicketNumber], [ExitTime], [ParkingDuration], [ParkingCharge], 
+                            [PenalityCharge], [TotalPaidAmount] FROM [tbl_parking] WHERE [IsParkingEntryDetailsUploadedToServer] = 1 AND [IsParkingExitDetailsUploadedToServer] = 0  AND [ExitTime] >= DATEADD(SECOND, -30,  GETDATE())");
 
             queries.Add("UpdateVehicleExitWebServerUploadStatus", @"UPDATE [tbl_parking] SET [IsParkingExitDetailsUploadedToServer] = 1 WHERE [Id] = '{0}'");
         }
@@ -288,17 +294,16 @@ namespace Parking.Common
             }
         }
 
-        public DataTable GetVehicleEntryDataForWebServerUpload()
+        public DataTable GetVehicleEntryDataForWebServerUpload(bool withInterval = false)
         {
             try
             {
-                var query = string.Format(queries["GetVehicleEntryWebServerUploadData"]);
+                var query = (withInterval) ? 
+                        string.Format(queries["GetVehicleEntryWebServerUploadDataWithInterval"])
+                        : string.Format(queries["GetVehicleEntryWebServerUploadData"]);
 
                 var sqlCommand = sqlDataAccess.GetCommand(query);
-
-                var result = sqlDataAccess.Execute(sqlCommand);
-
-                return result;
+                return sqlDataAccess.Execute(sqlCommand);
             }
             catch (Exception exception)
             {
@@ -322,14 +327,14 @@ namespace Parking.Common
             }
         }
 
-        public DataTable GetVehicleExitDataForWebServerUpload()
+        public DataTable GetVehicleExitDataForWebServerUpload(bool withInterval = false)
         {
             try
             {
-                var query = string.Format(queries["GetVehicleExitWebServerUploadData"]);
-
+                var query = (withInterval) ?
+                       string.Format(queries["GetVehicleExitWebServerUploadDataWithInterval"])
+                       : string.Format(queries["GetVehicleExitWebServerUploadData"]);
                 var sqlCommand = sqlDataAccess.GetCommand(query);
-
                 return sqlDataAccess.Execute(sqlCommand);
             }
             catch (Exception exception)

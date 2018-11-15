@@ -31,12 +31,10 @@
             this.tbcServer = new System.Windows.Forms.TabControl();
             this.tpServer1 = new System.Windows.Forms.TabPage();
             this.lblTicketDispenserStatus = new System.Windows.Forms.Label();
-            this.btnLoadTicketDispenserData = new System.Windows.Forms.Button();
             this.lblTicketDispenserDataLastUpdated = new System.Windows.Forms.Label();
             this.gridViewTicketDispenser = new System.Windows.Forms.DataGridView();
             this.tpServer2 = new System.Windows.Forms.TabPage();
             this.lblManualPayStationStatus = new System.Windows.Forms.Label();
-            this.btnLoadManualPayStationData = new System.Windows.Forms.Button();
             this.lblManualPaySationDataLastUpdated = new System.Windows.Forms.Label();
             this.gridViewManualPaySation = new System.Windows.Forms.DataGridView();
             this.tpServer3 = new System.Windows.Forms.TabPage();
@@ -127,7 +125,6 @@
             // tpServer1
             // 
             this.tpServer1.Controls.Add(this.lblTicketDispenserStatus);
-            this.tpServer1.Controls.Add(this.btnLoadTicketDispenserData);
             this.tpServer1.Controls.Add(this.lblTicketDispenserDataLastUpdated);
             this.tpServer1.Controls.Add(this.gridViewTicketDispenser);
             this.tpServer1.Location = new System.Drawing.Point(4, 22);
@@ -146,16 +143,6 @@
             this.lblTicketDispenserStatus.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.lblTicketDispenserStatus.Size = new System.Drawing.Size(0, 13);
             this.lblTicketDispenserStatus.TabIndex = 6;
-            // 
-            // btnLoadTicketDispenserData
-            // 
-            this.btnLoadTicketDispenserData.Location = new System.Drawing.Point(6, 10);
-            this.btnLoadTicketDispenserData.Name = "btnLoadTicketDispenserData";
-            this.btnLoadTicketDispenserData.Size = new System.Drawing.Size(164, 23);
-            this.btnLoadTicketDispenserData.TabIndex = 4;
-            this.btnLoadTicketDispenserData.Text = "Start Fetching/Uploading Data";
-            this.btnLoadTicketDispenserData.UseVisualStyleBackColor = true;
-            this.btnLoadTicketDispenserData.Click += new System.EventHandler(this.btnLoadTicketDispenserData_Click);
             // 
             // lblTicketDispenserDataLastUpdated
             // 
@@ -177,7 +164,6 @@
             // tpServer2
             // 
             this.tpServer2.Controls.Add(this.lblManualPayStationStatus);
-            this.tpServer2.Controls.Add(this.btnLoadManualPayStationData);
             this.tpServer2.Controls.Add(this.lblManualPaySationDataLastUpdated);
             this.tpServer2.Controls.Add(this.gridViewManualPaySation);
             this.tpServer2.Location = new System.Drawing.Point(4, 22);
@@ -195,16 +181,6 @@
             this.lblManualPayStationStatus.Name = "lblManualPayStationStatus";
             this.lblManualPayStationStatus.Size = new System.Drawing.Size(0, 13);
             this.lblManualPayStationStatus.TabIndex = 8;
-            // 
-            // btnLoadManualPayStationData
-            // 
-            this.btnLoadManualPayStationData.Location = new System.Drawing.Point(7, 13);
-            this.btnLoadManualPayStationData.Name = "btnLoadManualPayStationData";
-            this.btnLoadManualPayStationData.Size = new System.Drawing.Size(162, 23);
-            this.btnLoadManualPayStationData.TabIndex = 5;
-            this.btnLoadManualPayStationData.Text = "Start Fetching/Uploading Data";
-            this.btnLoadManualPayStationData.UseVisualStyleBackColor = true;
-            this.btnLoadManualPayStationData.Click += new System.EventHandler(this.btnLoadManualPayStationData_Click);
             // 
             // lblManualPaySationDataLastUpdated
             // 
@@ -840,8 +816,6 @@
         private System.Windows.Forms.DataGridView gridViewManualPaySation;
         private System.Windows.Forms.Label lblTicketDispenserDataLastUpdated;
         private System.Windows.Forms.Label lblManualPaySationDataLastUpdated;
-        private System.Windows.Forms.Button btnLoadTicketDispenserData;
-        private System.Windows.Forms.Button btnLoadManualPayStationData;
         private System.Windows.Forms.Label lblTicketDispenserStatus;
         private System.Windows.Forms.Label lblManualPayStationStatus;
         private System.Windows.Forms.Label label9;

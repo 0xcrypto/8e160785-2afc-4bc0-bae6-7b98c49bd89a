@@ -12,18 +12,24 @@ using Parking.Common;
 using Parking.Common.Enums;
 using Flurl.Http;
 using System.Threading.Tasks;
+using System.Threading;
+using Timer = System.Threading.Timer;
 
 namespace Parking
 {
     public partial class TicketDispenserServerForm : Form
     {
-        
+
         private Timer _gridViewTicketDispenserDataFetchTimer = null;
+        private Timer _gridViewTicketDispenserDataUploadTimer = null;
+        private int _ticketDispenserCounter = 30;
+        private bool _ticketDispenserUploadInProgress;
+
         private Timer _gridViewManualPayStationDataFetchTimer = null;
-        private bool _isTicketDispenserTaskInProgress = false;
-        private bool _isManualPayStationTaskInProgress = false;
-        List<string> _ticketDispenserUploadedRecords = new List<string>();
-        List<string> _manualPayStationUploadedRecords = new List<string>();
+        private Timer _gridViewManualPayStationDataUploadTimer = null;
+        private int _manualPayStationCounter = 30;
+        private bool _manualPayStationUploadInProgress;
+
         private const string _ManualPayStationDataUploadURL = "http://codeshow.in/api/";
         private const string _TicketDispenserDataUploadURL = "http://codeshow.in/api/";
 
@@ -37,68 +43,69 @@ namespace Parking
         
         private void TicketDispenserServerForm_Load(object sender, EventArgs e)
         {
-            _gridViewTicketDispenserDataFetchTimer = new Timer() { Interval = 1000 };
-            _gridViewTicketDispenserDataFetchTimer.Tick += RefreshTicketDispenserGridView;
+            _gridViewTicketDispenserDataFetchTimer = new Timer(new TimerCallback(TicketDispenserFetchTimerCallback), null, 0, 1000);
+            _gridViewTicketDispenserDataUploadTimer = new Timer(new TimerCallback(TicketDispenserUploadTimerCallback), null, 0, 1000);
 
-            _gridViewManualPayStationDataFetchTimer = new Timer() { Interval = 1000 };
-            _gridViewManualPayStationDataFetchTimer.Tick += RefreshManualPayStationGridView;
+            gridViewTicketDispenser.ColumnCount = 7;
+            gridViewTicketDispenser.Columns[0].Name = "Parking ID";
+            gridViewTicketDispenser.Columns[1].Name = "TD Client Device ID";
+            gridViewTicketDispenser.Columns[2].Name = "Ticket Number";
+            gridViewTicketDispenser.Columns[3].Name = "Validation Number";
+            gridViewTicketDispenser.Columns[4].Name = "Vehicle Number";
+            gridViewTicketDispenser.Columns[5].Name = "Vehicle Type";
+            gridViewTicketDispenser.Columns[6].Name = "Entry Time";
+
+            gridViewTicketDispenser.Invoke(new Action(() => {
+                GetTicketDispenserData();
+            }));
+
+            _gridViewManualPayStationDataFetchTimer = new Timer(new TimerCallback(ManualPayStationFetchTimerCallback), null, 0, 1000);
+            _gridViewManualPayStationDataUploadTimer = new Timer(new TimerCallback(ManualPayStationUploadTimerCallback), null, 0, 1000);
+
+            gridViewManualPaySation.ColumnCount = 8;
+            gridViewManualPaySation.Columns[0].Name = "Parking ID";
+            gridViewManualPaySation.Columns[1].Name = "MPS Device ID";
+            gridViewManualPaySation.Columns[2].Name = "Ticket Number";
+            gridViewManualPaySation.Columns[3].Name = "Entry Time";
+            gridViewManualPaySation.Columns[4].Name = "Parking Duration";
+            gridViewManualPaySation.Columns[5].Name = "Parking Charge";
+            gridViewManualPaySation.Columns[6].Name = "Penality Charge";
+            gridViewManualPaySation.Columns[7].Name = "Total Amount";
+
+            gridViewManualPaySation.Invoke(new Action(() => {
+                GetManualPayStationData();
+            }));
 
             GetMasterSettingsForTDClientDeviceConfig();
             GetMasterSettingsForMPSDeviceConfig();
         }
+
         /** TICKET DISPENSER DATA FETCH & UPLOAD **/
-        private void RefreshTicketDispenserGridView(object sender, EventArgs e)
+        public void TicketDispenserFetchTimerCallback(object state)
         {
-            if (_isTicketDispenserTaskInProgress)
+            if (_ticketDispenserCounter == 0)
+            {
+                _ticketDispenserCounter = 30;
+                gridViewTicketDispenser.Invoke(new Action(() => {
+                    GetTicketDispenserData();
+                }));
+            }
+
+            _ticketDispenserCounter--;
+
+            lblTicketDispenserStatus.Invoke(new Action(() => {
+                lblTicketDispenserStatus.Text = string.Format("Next data will be fetched in: {0} seconds", _ticketDispenserCounter);
+            }));
+        }
+        public void TicketDispenserUploadTimerCallback(object state)
+        {
+            if (_ticketDispenserUploadInProgress)
                 return;
 
-            _gridViewTicketDispenserDataFetchTimer.Start();
-            LoadTicketDispenserGridView();
-        }
-        private void btnLoadTicketDispenserData_Click(object sender, EventArgs e)
-        {
-            btnLoadTicketDispenserData.Enabled = false;
-            lblTicketDispenserStatus.Text = "Please wait while fetching data...";
-            try
+            if (gridViewTicketDispenser.Rows.Count > 1)
             {
-                _isTicketDispenserTaskInProgress = true;
-                LoadTicketDispenserGridView();
-
-                if (_gridViewTicketDispenserDataFetchTimer != null)
-                    _gridViewTicketDispenserDataFetchTimer.Start();
-
-            }
-            catch (Exception ex)
-            {
-                btnLoadTicketDispenserData.Enabled = true;
-            }
-        }
-        public void LoadTicketDispenserGridView()
-        {
-            try
-            {
-                var records = _parkingDatabaseFactory.GetVehicleEntryDataForWebServerUpload();
-                if (records.Rows.Count > 0)
-                {
-                    gridViewTicketDispenser.DataSource = records;
-                    UploadTickerDispenserDataToServer();
-                }
-                else
-                {
-                    lblTicketDispenserStatus.Text = "No result found";
-                }
-            }
-            catch (Exception ex)
-            {
-                lblTicketDispenserStatus.Text = "Problem in fetching ticket dispenser data. Please try again later";
-                return;
-            }
-        }
-        public void UploadTickerDispenserDataToServer()
-        {
-            for (var i = 0; i <= gridViewTicketDispenser.Rows.Count - 1; i++)
-            {
-                var row = gridViewTicketDispenser.Rows[i];
+                _ticketDispenserUploadInProgress = true;
+                var row = gridViewTicketDispenser.Rows[0];
                 var parkingId = row.Cells[0].Value.ToString();
                 var tdClientDeviceId = row.Cells[1].Value.ToString();
                 var ticketNumber = row.Cells[2].Value.ToString();
@@ -107,8 +114,7 @@ namespace Parking
                 var vehicleType = row.Cells[5].Value.ToString();
                 var entryTime = row.Cells[6].ToString();
 
-                this.Invoke((MethodInvoker)delegate {
-                    var response = _TicketDispenserDataUploadURL
+                var response = _TicketDispenserDataUploadURL
                                            .PostUrlEncodedAsync(new
                                            {
                                                ParkingId = parkingId,
@@ -120,76 +126,64 @@ namespace Parking
                                                EntryTime = entryTime
                                            })
                                            .ReceiveString();
-                    if (response != null)
-                    {
-                        _parkingDatabaseFactory.UpdateVehicleEntryWebServerUploadStatus(parkingId);
-                        _ticketDispenserUploadedRecords.Add(ticketNumber);
+                if (response != null)
+                {
+                    gridViewTicketDispenser.Invoke(new Action(() => {
+                        _ticketDispenserUploadInProgress = false;
                         gridViewTicketDispenser.Rows.Remove(row);
-                        lblTicketDispenserStatus.Text = "Uploaded " + _ticketDispenserUploadedRecords.Count + " of " + gridViewTicketDispenser.Rows.Count + " Records";
-
-                        if (_ticketDispenserUploadedRecords.Count == gridViewTicketDispenser.Rows.Count)
-                        {
-                            _isTicketDispenserTaskInProgress = false;
-                            _ticketDispenserUploadedRecords = new List<string>();
-                            lblTicketDispenserDataLastUpdated.Text = string.Format(@"Last Updated: {0}", DateTime.Now.ToString());
-                        }
-                    }
-                });
+                    }));
+                }
             }
+        }
+        public void GetTicketDispenserData()
+        {
+            try
+            {
+                var records = _parkingDatabaseFactory.GetVehicleEntryDataForWebServerUpload(true);
+                for (var i = 0; i <= records.Rows.Count - 1; i++)
+                {
+                    var data = records.Rows[i];
+                    var parkingId = data[0].ToString();
+                    var tdClientDeviceId = data[1].ToString();
+                    var ticketNumber = data[2].ToString();
+                    var validationNumber = data[3].ToString();
+                    var vehicleNumber = data[4].ToString();
+                    var vehicleType = data[5].ToString();
+                    var entryTime = data[6].ToString();
+
+                    gridViewTicketDispenser.Rows.Add(new string[] { parkingId, tdClientDeviceId, ticketNumber, validationNumber,
+                        vehicleNumber, vehicleType, entryTime});
+                }
+            }
+            catch (Exception ex){}
         }
 
         /** MANUAL PAY STATION DATA FETCH & UPLOAD **/
-        private void RefreshManualPayStationGridView(object sender, EventArgs e)
+        private void ManualPayStationFetchTimerCallback(object state)
         {
-            if (_isManualPayStationTaskInProgress)
+            if (_manualPayStationCounter == 0)
+            {
+                _manualPayStationCounter = 30;
+                gridViewManualPaySation.Invoke(new Action(() => {
+                    GetManualPayStationData();
+                }));
+            }
+
+            _manualPayStationCounter--;
+
+            lblManualPayStationStatus.Invoke(new Action(() => {
+                lblManualPayStationStatus.Text = string.Format("Next data will be fetched in: {0} seconds", _manualPayStationCounter);
+            }));
+        }
+        public void ManualPayStationUploadTimerCallback(object state)
+        {
+            if (_manualPayStationUploadInProgress)
                 return;
 
-            _gridViewManualPayStationDataFetchTimer.Start();
-            LoadManualPayStationGridView();
-        }
-        private void btnLoadManualPayStationData_Click(object sender, EventArgs e)
-        {
-            btnLoadManualPayStationData.Enabled = false;
-            lblTicketDispenserStatus.Text = "Please wait while fetching data...";
-            try
+            if (gridViewManualPaySation.Rows.Count > 1)
             {
-                _isManualPayStationTaskInProgress = true;
-                LoadManualPayStationGridView();
-
-                if (_gridViewManualPayStationDataFetchTimer != null)
-                    _gridViewManualPayStationDataFetchTimer.Start();
-            }
-            catch (Exception ex)
-            {
-                btnLoadManualPayStationData.Enabled = true;
-            }
-        }
-        public void LoadManualPayStationGridView()
-        {
-            try
-            {
-                var records = _parkingDatabaseFactory.GetVehicleExitDataForWebServerUpload();
-                if(records.Rows.Count > 0)
-                {
-                    gridViewManualPaySation.DataSource = records;
-                    UploadManualPayStationDataToServer();
-                }
-                else
-                {
-                    lblTicketDispenserStatus.Text = "No result found";
-                }
-            }
-            catch (Exception ex)
-            {
-                lblTicketDispenserStatus.Text = "Problem in fetching manual pay station data. Please try again later";
-                return;
-            }
-        }
-        public void UploadManualPayStationDataToServer()
-        {
-            for (var i = 0; i <= gridViewManualPaySation.Rows.Count - 1; i++)
-            {
-                var row = gridViewManualPaySation.Rows[i];
+                _manualPayStationUploadInProgress = true;
+                var row = gridViewManualPaySation.Rows[0];
                 var parkingId = row.Cells[0].Value.ToString();
                 var mpsDeviceId = row.Cells[1].Value.ToString();
                 var ticketNumber = row.Cells[2].Value.ToString();
@@ -199,8 +193,7 @@ namespace Parking
                 var penalityCharge = row.Cells[6].Value.ToString();
                 var totalAmount = row.Cells[7].Value.ToString();
 
-                this.Invoke((MethodInvoker)delegate {
-                    var response = _ManualPayStationDataUploadURL
+                var response = _ManualPayStationDataUploadURL
                                             .PostUrlEncodedAsync(new
                                             {
                                                 ParkingId = parkingId,
@@ -213,22 +206,39 @@ namespace Parking
                                                 TotalAmount = totalAmount
                                             })
                                             .ReceiveString();
-                    if (response != null)
-                    {
-                        _parkingDatabaseFactory.UpdateVehicleExitWebServerUploadStatus(parkingId);
-                        _manualPayStationUploadedRecords.Add(ticketNumber);
+                if (response != null)
+                {
+                    _parkingDatabaseFactory.UpdateVehicleExitWebServerUploadStatus(parkingId);
+                    gridViewManualPaySation.Invoke(new Action(() => {
+                        _manualPayStationUploadInProgress = false;
                         gridViewManualPaySation.Rows.Remove(row);
-                        lblManualPayStationStatus.Text = "Uploaded " + _manualPayStationUploadedRecords.Count + " of " + gridViewManualPaySation.Rows.Count + " Records";
+                    }));
+                }
 
-                        if (_manualPayStationUploadedRecords.Count == gridViewManualPaySation.Rows.Count)
-                        {
-                            _isManualPayStationTaskInProgress = false;
-                            _manualPayStationUploadedRecords = new List<string>();
-                            lblManualPaySationDataLastUpdated.Text = string.Format(@"Last Updated: {0}", DateTime.Now.ToString());
-                        }
-                    }
-                });
             }
+        }
+        public void GetManualPayStationData()
+        {
+            try
+            {
+                var records = _parkingDatabaseFactory.GetVehicleExitDataForWebServerUpload(true);
+                for (var i = 0; i <= records.Rows.Count - 1; i++)
+                {
+                    var data = records.Rows[i];
+                    var parkingId = data[0].ToString();
+                    var mpsDeviceId = data[1].ToString();
+                    var ticketNumber = data[2].ToString();
+                    var entryTime = data[3].ToString();
+                    var parkingDuration = data[4].ToString();
+                    var parkingCharge = data[5].ToString();
+                    var penalityCharge = data[6].ToString();
+                    var totalAmount = data[7].ToString();
+
+                    gridViewManualPaySation.Rows.Add(new string[] { parkingId, mpsDeviceId, ticketNumber, entryTime,
+                        parkingDuration, parkingCharge, penalityCharge, totalAmount});
+                }
+            }
+            catch (Exception ex) { }
         }
 
         /** TICKET DISPENSER CONFIGURATION SETTINGS **/
